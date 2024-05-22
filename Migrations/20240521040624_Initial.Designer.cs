@@ -12,7 +12,7 @@ using VHECIntershipMain.Data;
 namespace VHECIntershipMain.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240520082704_Initial")]
+    [Migration("20240521040624_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -44,16 +44,16 @@ namespace VHECIntershipMain.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
+                    b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace VHECIntershipMain.Controllers
@@ -18,7 +19,7 @@ namespace VHECIntershipMain.Controllers
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetWeatherForecast")]
+        [HttpGet(Name = "GetWeatherForecast"), Authorize]
         public IEnumerable<WeatherForecast> Get()
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
@@ -29,7 +30,7 @@ namespace VHECIntershipMain.Controllers
             })
             .ToArray();
         }
-        [HttpGet("greeting", Name = "GetGreeting")]
+        [HttpGet("greeting", Name = "GetGreeting"),Authorize]
         public ActionResult<string> GetGreeting()
         {
             return "Hello, this is a simple text string!";

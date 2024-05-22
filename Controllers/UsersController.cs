@@ -49,9 +49,9 @@ namespace VHECIntershipMain.Controllers
             {
                 return BadRequest("User not found on Database");
             }
-            user.Name = editingUser.Name;
+            user.UserName = editingUser.UserName;
             user.Email = editingUser.Email;
-            user.Password = editingUser.Password;
+            user.PasswordHash = editingUser.PasswordHash;
             user.Address = editingUser.Address;
             user.UpdatedAt = DateTime.UtcNow;
 
