@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -16,6 +17,7 @@ namespace VHECIntershipMain.Controllers
     [ApiController]
     public class AuthController : Controller
     {
+    
         //THis can be future improve with user manager in identity framework.
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
@@ -37,12 +39,13 @@ namespace VHECIntershipMain.Controllers
         private string GenerateJwtToken(UserModel model)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration.GetSection("JWT:SigningKey").Value!);
+            var key = Encoding.ASCII.GetBytes(_configuration.GetSection("JWT:Key").Value!);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                new Claim(ClaimTypes.Name, model.UserName)
+                new Claim(ClaimTypes.Name, model.UserName),
+                new Claim(ClaimTypes.Role, "Admin")
             }),
                 Expires = DateTime.UtcNow.AddMinutes(15),
                 //Issuer = _jwtSettings.Issuer,
@@ -53,12 +56,17 @@ namespace VHECIntershipMain.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
-
+        [HttpGet("Name"), Authorize]
+        public ActionResult<string> GetMyName()
+        {
+            var userName = User?.Identity?.Name;
+            return Ok(new { userName });
+        }
 
         [HttpGet]
         public string testa()
         {
-            UserModel user = new UserModel { Email = "aaa@gmail.com", PasswordHash = "aaaaa123", UserName = "TruongVMTestUser" };
+            UserModel user = new UserModel { UserEmail = "aaa@gmail.com", PasswordHash = "aaaaa123", UserName = "TruongVMTestUser" };
             string data = GenerateJwtToken(user);
             return data;
         }

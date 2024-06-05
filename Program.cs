@@ -64,15 +64,24 @@ builder.Services.AddAuthentication(
         ValidateAudience = false,
         //ValidAudience = builder.Configuration["JWT:Audience"],
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("TruongVM1234567891011121314151617181920212223242511111111111111111111111111111111111111111111111111111111111111111")),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]!)),
         //ValidateLifetime = true,
         //builder.Configuration["JWT:SigningKey"]!,
         
     };
 });
-
 // Add Authorization for my service
 builder.Services.AddAuthorization();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 var app = builder.Build();
 
     // Configure the HTTP request pipeline.
@@ -81,7 +90,7 @@ var app = builder.Build();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors("AllowAllOrigins");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

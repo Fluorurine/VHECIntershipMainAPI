@@ -19,7 +19,7 @@ namespace VHECIntershipMain.Controllers
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetWeatherForecast"), Authorize]
+        [HttpGet(Name = "GetWeatherForecast"), Authorize(Roles ="Admin")]
         public IEnumerable<WeatherForecast> Get()
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
@@ -30,7 +30,7 @@ namespace VHECIntershipMain.Controllers
             })
             .ToArray();
         }
-        [HttpGet("greeting", Name = "GetGreeting"),Authorize]
+        [HttpGet("greeting", Name = "GetGreeting"),Authorize(Roles ="User")]
         public ActionResult<string> GetGreeting()
         {
             return "Hello, this is a simple text string!";
